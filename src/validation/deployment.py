@@ -33,6 +33,7 @@ class DeploymentInfo:
     push_trigger_tests_prefix: str
     github_bot_name: str
     gitlab_account_name: str
+    forgejo_account_name: str
 
 
 PRODUCTION_INFO = DeploymentInfo(
@@ -45,6 +46,7 @@ PRODUCTION_INFO = DeploymentInfo(
     push_trigger_tests_prefix="Basic test case (prod): push trigger",
     github_bot_name="packit-as-a-service[bot]",
     gitlab_account_name="packit-as-a-service",
+    forgejo_account_name="avant",
 )
 STAGING_INFO = DeploymentInfo(
     name="stg",
@@ -60,6 +62,24 @@ STAGING_INFO = DeploymentInfo(
     push_trigger_tests_prefix="Basic test case (stg): push trigger",
     github_bot_name="packit-as-a-service-stg[bot]",
     gitlab_account_name="packit-as-a-service-stg",
+    forgejo_account_name="avant",
+)
+
+AVANT_INFO = DeploymentInfo(
+    name="avant",
+    app_name="avant",
+    pr_comment="/review",
+    pr_comment_vm_image_build="/packit-stg vm-image-build",
+    opened_pr_trigger__packit_yaml_fix=YamlFix(
+        from_str="---",
+        to_str='---\npackit_instances: ["stg"]',
+        git_msg="Build using Packit-stg",
+    ),
+    copr_user="manky201",
+    push_trigger_tests_prefix="Basic test case (stg): push trigger",
+    github_bot_name="packit-as-a-service-stg[bot]",
+    gitlab_account_name="packit-as-a-service-stg",
+    forgejo_account_name="avant",
 )
 
 DEPLOYMENT = (

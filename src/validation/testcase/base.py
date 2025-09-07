@@ -62,7 +62,10 @@ class Testcase(ABC):
                 self.pr.close()
                 self.pr_branch_ref.delete()
         except Exception as e:
-            msg = f"Validation test {self.pr.title} ({self.pr.url}) failed: {e}"
+            if self.pr:
+                msg = f"Validation test {self.pr.title} ({self.pr.url}) failed: {e}"
+            else:
+                msg = f"Validation test failed: {e}"
             logging.error(msg)
             tb = traceback.format_exc()
             logging.error(tb)

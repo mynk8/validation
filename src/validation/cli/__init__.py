@@ -8,6 +8,7 @@ from os import getenv
 
 import click
 
+from validation.tests.forgejo import ForgejoTests
 from validation.tests.github import GithubTests
 from validation.tests.gitlab import GitlabTests
 
@@ -53,6 +54,31 @@ def validation():
         logging.info("Running validation for GitLab instance: %s", instance_url)
         task = loop.create_task(
             GitlabTests(
+                instance_url=instance_url,
+                namespace=namespace,
+                token_name=token,
+            ).run(),
+        )
+
+        tasks.add(task)
+        task.add_done_callback(tasks.discard)
+
+    # Forgejo
+    forgejo_instances = [
+        ("https://codeberg.org", "avant", "FORGEJO_TOKEN"),
+    ]
+    for instance_url, namespace, token in forgejo_instances:
+        if not getenv(token):
+            logging.info(
+                "%s not set, skipping the validation for Forgejo instance: %s",
+                token,
+                instance_url,
+            )
+            continue
+
+        logging.info("Running validation for Forgejo instance: %s", instance_url)
+        task = loop.create_task(
+            ForgejoTests(
                 instance_url=instance_url,
                 namespace=namespace,
                 token_name=token,
